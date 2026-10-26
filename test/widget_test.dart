@@ -40,6 +40,20 @@ void main() {
     expect(tarefas.single['titulo'], 'Entregar atividade');
   });
 
+  testWidgets('switch de modo escuro aplica e persiste o tema na hora', (tester) async {
+    SharedPreferences.setMockInitialValues({});
+
+    await tester.pumpWidget(const MeuApp(modoEscuroInicial: false));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byType(Switch));
+    await tester.pumpAndSettle();
+
+    final app = tester.widget<MaterialApp>(find.byType(MaterialApp));
+    expect(app.themeMode, ThemeMode.dark);
+    expect(await PreferencesService().obterModoEscuro(), isTrue);
+  });
+
   testWidgets('redefinir padrões limpa preferências', (tester) async {
     SharedPreferences.setMockInitialValues({
       'key_nome_usuario': 'Maria',

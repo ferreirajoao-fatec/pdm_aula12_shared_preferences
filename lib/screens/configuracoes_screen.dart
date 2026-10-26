@@ -64,6 +64,13 @@ class _ConfiguracoesScreenState extends State<ConfiguracoesScreen> {
     }
   }
 
+  // Aplica o tema na hora e já grava no disco, sem depender do botão Salvar
+  Future<void> _alterarModoEscuro(bool valor) async {
+    setState(() => _modoEscuro = valor);
+    widget.onTemaAlterado(valor);
+    await _service.salvarModoEscuro(valor);
+  }
+
   Future<void> _redefinirPadroes() async {
     final confirmado = await showDialog<bool>(
       context: context,
@@ -159,7 +166,7 @@ class _ConfiguracoesScreenState extends State<ConfiguracoesScreen> {
               title: const Text('Ativar Modo Escuro'),
               subtitle: const Text('Persiste o tema visual selecionado no disco'),
               value: _modoEscuro,
-              onChanged: (valor) => setState(() => _modoEscuro = valor),
+              onChanged: _alterarModoEscuro,
             ),
             const Divider(height: 32),
             Row(
